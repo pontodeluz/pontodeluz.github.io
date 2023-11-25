@@ -9,7 +9,7 @@ if(telacheia) {
             box-sizing: border-box;
         }
         #tela {
-            background-image: url(https://www.c-online.med.br/wp-content/uploads/2023/10/CASAWALLPAPER.jpeg); 
+            background-image: url(https://raw.githubusercontent.com/pontodeluz/pontodeluz.github.io/main/CASAWALLPAPER.jpeg); 
             overflow: hidden;
            background-position: center center; 
            background-repeat: no-repeat; 
@@ -94,7 +94,7 @@ function update() {
 
             image.getTransform().rotate(Math.random() * 360)
             group1.add(image)
-            imageObj.src = 'https://raw.githubusercontent.com/josedoce/josedoce.github.io/main/pontodeluz/s.png'
+            imageObj.src = 'https://raw.githubusercontent.com/pontodeluz/pontodeluz.github.io/main/s.png'
             
             text.opacity(0)
 
