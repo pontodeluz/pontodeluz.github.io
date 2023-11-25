@@ -1,29 +1,48 @@
 /**
  * @author josedoce
+ * @link https://github.com/josedoce
  */
-if(telacheia) {
-  document.body.innerHTML = `<style>
-        *{
-            padding: 0;
-            margin: 0;
-            box-sizing: border-box;
-        }
-        #tela {
-            background-image: url(https://raw.githubusercontent.com/pontodeluz/pontodeluz.github.io/main/CASAWALLPAPER.jpeg); 
-            overflow: hidden;
-           background-position: center center; 
-           background-repeat: no-repeat; 
-           background-size: cover; 
-           filter: blur(0px); 
-           opacity: 1;
-           width: 100%;
-           height: 100vh;
-           display: flex;
-           flex-wrap: wrap;
-        }
-</style>
-<div id="tela"></div>`
-}
+
+const imagem = new Image();
+const imagem2 = new Image();
+// Atribui a URL da imagem ao src da imagem em JavaScript
+imagem.src = 'https://www.c-online.med.br/wp-content/uploads/2023/10/CASAWALLPAPER.jpeg'
+imagem2.src = 'https://raw.githubusercontent.com/josedoce/josedoce.github.io/main/pontodeluz/s.png'
+
+//Garantia de que as imagens vão renderizar no seu tempo
+imagem2.addEventListener('load', function(){
+  imagem.addEventListener('load', function() {
+  
+    document.getElementById("tela").classList.remove("hide")
+    document.getElementById("loading").classList.add("hide")
+  
+    if(telacheia) {
+      document.body.innerHTML = `<style>
+            *{
+                padding: 0;
+                margin: 0;
+                box-sizing: border-box;
+            }
+            #tela {
+                background-image: url(https://www.c-online.med.br/wp-content/uploads/2023/10/CASAWALLPAPER.jpeg); 
+                overflow: hidden;
+               background-position: center center; 
+               background-repeat: no-repeat; 
+               background-size: cover; 
+               filter: blur(0px); 
+               opacity: 1;
+               width: 100%;
+               height: 100vh;
+               display: flex;
+               flex-wrap: wrap;
+            }
+    </style>
+    <div id="tela"></div>`
+    }
+  
+  });
+}) 
+
 
 function update() {
   
@@ -83,18 +102,18 @@ function update() {
       
             group1.add(text)
             //group1.add(circulo);
-            const imageObj = new Image();
+            
 
             const image = new Konva.Image({
               
-              image: imageObj,
+              image: imagem2,
               width: 100,
               height: 100
             });
 
             image.getTransform().rotate(Math.random() * 360)
             group1.add(image)
-            imageObj.src = 'https://raw.githubusercontent.com/pontodeluz/pontodeluz.github.io/main/s.png'
+        
             
             text.opacity(0)
 
