@@ -124,17 +124,17 @@ function update() {
             });
 
             tooltip.add(new Konva.Tag({
-                fill: 'black'
+                fill: '#f05338'
               })
             );
 
             const tt = new Konva.Text({
               text: "Obrigado por iluminar, " + pessoas[i].nome +" 🥰️",
-              fontSize:26,
+              fontSize:22,
               fontFamily:'Arial',
               fill:'white',
               stroke: 'white',
-              padding: 20,
+              padding: 10,
             });
 
             tooltip.add(tt)
