@@ -12,12 +12,6 @@ class Pessoa{
   }
 }
 
-pessoas.forEach((pessoa, i)=>{
-  listaPessoas.push(new Pessoa({id: pessoa.bloco, nome: pessoa.nome }))
-});
-
-
-
 class Bloquinho {
   constructor({
     id,
@@ -47,7 +41,7 @@ imagem3.src = './assets/estrelinha.png'
 imagem4.src = './assets/completado.png'
 imagem5.src = './assets/completado_opacidade10.png'
 const estrelinhaMobile = new Image();
-estrelinhaMobile.src = "./estrelinha_mobile.png"
+estrelinhaMobile.src = "./assets/estrelinha_mobile.png"
 
 //Garantia de que as imagens vão renderizar no seu tempo
 const timeout1 = setTimeout(()=>{
@@ -88,7 +82,7 @@ function eventoExibirNome(bloquinho, layer){
   });
 
   tooltip.add(new Konva.Tag({
-      fill: '#f05338',
+      fill: '#fff',
       cornerRadius: 5
     })
   );
@@ -105,46 +99,36 @@ function eventoExibirNome(bloquinho, layer){
     padding = 16;
   }
 
-  const pessoa = listaPessoas.find((pessoa)=> pessoa.id === bloquinho.pessoaId)
-  if(pessoa == undefined){
-    return
-  }
   const texto = new Konva.Text({
-    text: "Ponto de luz de " + pessoa.nome +" 🥰️",
+    text: "Bloco ["+bloquinho.attrs.text+"]",
     fontSize: fontsize,
     fontFamily:'Arial',
-    fill:'white',
-    stroke: 'white',
+    fill:'black',
+    stroke: 'black',
     padding: padding,
   });
 
   tooltip.add(texto)
-    bloquinho.instanciaImagem.on('click tap', function() {
-      tooltips.forEach((tooltip)=>{
-        tooltip.remove()
-      });
-      hasLuz(bloquinho.instanciaImagem, null, ()=>{
-
+    bloquinho.on('click tap', function() {
+        tooltips.forEach((tooltip)=>{
+            tooltip.remove()
+        });
         layer.add(tooltip)
         tooltip.x((width/2) - (texto.width() / 2))
-      })
-      tooltips.push(tooltip)
+        tooltips.push(tooltip)
     });
     
 
-    bloquinho.instanciaImagem.on('mouseover', function() {
-      tooltips.forEach((tooltip)=>{
-        tooltip.remove()
-      });
-      hasLuz(bloquinho.instanciaImagem, null, ()=>{
-
+    bloquinho.on('mouseover', function() {
+        tooltips.forEach((tooltip)=>{
+            tooltip.remove()
+        });
         layer.add(tooltip)
         tooltip.x((width/2) - (texto.width() / 2))
-      })
-      tooltips.push(tooltip)
+        tooltips.push(tooltip)
     });
   
-    bloquinho.instanciaImagem.on('mouseout', function() {
+    bloquinho.on('mouseout', function() {
       tooltips.forEach((tooltip)=>{
         tooltip.remove()
       })
@@ -166,7 +150,9 @@ function hasLuz(image, stage, callback = ()=>{}) {
 //marca como mãozinha caso o mouse esteja sobre a estrelinha.
 function eventoPonteira(image, stage){
   image.on('mouseenter', function () {
-    hasLuz(image, stage)
+    if(stage != null){
+      stage.container().style.cursor = 'pointer';
+    }
   });
 
   image.on('mouseleave', function () {
@@ -176,7 +162,13 @@ function eventoPonteira(image, stage){
 
 //estrelinhas cheias
 function minhaEstrelinha(){
-  if(listaPessoas.length == bloquinhos.length){
+  let estrelinhas = 0;
+  for(let i = 0; i < 1224; i++){
+    bloquinhos[i].attrs.image=imagem3
+    estrelinhas++
+  }
+  
+  if(estrelinhas == bloquinhos.length){
     for(let i = 0; i < bloquinhos.length; i++){
       bloquinhos[i].attrs.image=imagem5
     }
@@ -198,10 +190,10 @@ function update() {
 
   const layer = new Konva.Layer();
 
-  stage.add(layer);
+  //stage.add(layer);
   let cX = 0;
   let cY = 0;
-  let img = imagem2
+
  
   const r = ajustarQuadradosNoRetangulo(width, height);
   let w = r.tamanhoQuadradoLargura
@@ -211,36 +203,36 @@ function update() {
   let coluna = 0;
   while(linha < r.numeroLinhas){
     while(coluna < r.numeroColunas){
-      const image = new Konva.Image({
-        //stroke: 'white', 
+      const retangulo = new Konva.Rect({
+        fill: 'rgba(0,0,0,0.6)',
+        stroke: '#fff',
+        strokeWidth: 0.1, 
         x: cX,
         y: cY,
-        image: img,
         width: w,
         height: h
       });
-      
-      quantidadeBlocos++;
-      //eventos
-      eventoPonteira(image, stage)
 
-      //addiciona estrelinhas ao painel
-      const pessoa = listaPessoas.find((pessoa)=> pessoa.id === id)
-      if(pessoa !== undefined){
-        image.attrs.image = imagem3
-      }
-      const bloquinho = new Bloquinho({
-        id: id,
-        imagem: image,
-        pessoaId: id
+      const texto = new Konva.Text({
+        text: id,
+        fontSize: 13,
+        fontFamily:'Arial',
+        fill:'white',
+        padding: 0,
+        x: cX,
+        y: cY + 8,
+        width: w,
+        height: h,
+        align: 'center'
       });
 
-      eventoExibirNome(bloquinho, layer)
+      quantidadeBlocos++;
+      eventoPonteira(texto, stage)    
+      eventoExibirNome(texto, layer)
       cX += w
       id++;
-      bloquinhos.push(image)
-      blocos.push(bloquinho)
-      layer.add(image)
+      layer.add(retangulo)
+      layer.add(texto)
       coluna++
     }
     coluna=0
@@ -248,9 +240,10 @@ function update() {
     cX=0
     cY+=h
   }
-  minhaEstrelinha()
+  //minhaEstrelinha()
 
   //estrelinhaAquiEstao()
+  stage.add(layer);
 }
         
 update()
