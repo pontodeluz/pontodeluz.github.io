@@ -3,257 +3,196 @@
  * @link https://github.com/josedoce
  */
 
+const cobertura = PIXI.Texture.from('./assets/cobertura.png');
+const luz = PIXI.Texture.from('./assets/teste.svg');
+const luz10Opacidade = PIXI.Texture.from('./assets/completado_opacidade10.png');
+const app = new PIXI.Application({ backgroundAlpha: 0, resizeTo: window });
+
+document.body.appendChild(app.view);
 
 const listaPessoas = [];
 class Pessoa{
   constructor({id, nome}){
-    this.id = id;
-    this.nome = nome;
+      this.id = id;
+      this.nome = nome;
   }
 }
 
-pessoas.forEach((pessoa, i)=>{
-  listaPessoas.push(new Pessoa({id: pessoa.bloco, nome: pessoa.nome }))
-});
-
-
-
-class Bloquinho {
-  constructor({
-    id,
-    pessoaId,
-    imagem
-  }){
-    this.id = id;
-    this.pessoaId = pessoaId;
-    this.instanciaImagem = imagem
-  }
-}
-
-const tooltips = [];
-let quantidadeBlocos = 0;
-
-const imagem = new Image();
-const imagem2 = new Image();
-const imagem3 = new Image();
-const imagem4 = new Image();
-const imagem5 = new Image();
-const opacidadeMaxima = new Image();
-
-// Atribui a URL da imagem ao src da imagem em JavaScript
-imagem.src = 'https://www.c-online.med.br/wp-content/uploads/2023/10/CASAWALLPAPER.jpeg'
-imagem2.src = './assets/cobertura.png'
-imagem3.src = './assets/estrelinha.png'
-imagem4.src = './assets/completado.png'
-imagem5.src = './assets/completado_opacidade10.png'
-const estrelinhaMobile = new Image();
-estrelinhaMobile.src = "./estrelinha_mobile.png"
-
-//Garantia de que as imagens vão renderizar no seu tempo
-const timeout1 = setTimeout(()=>{
-  document.getElementById("tela").classList.remove("hide")
-  document.getElementById("loading").classList.add("hide")
-  clearTimeout(timeout1)
-}, 3000);
-
-function ajustarQuadradosNoRetangulo(larguraRetangulo, alturaRetangulo) {
-  //quantidade de blocos na tela (arredondado para cima ficando na casa dos 1225 blocos)
-  const numeroQuadrados = 1200;
-
-  // Calcula o número de linhas e colunas
-  const raizQuadrada = Math.sqrt(numeroQuadrados);
-  const numeroLinhas = Math.ceil(raizQuadrada);
-  const numeroColunas = Math.ceil(numeroQuadrados / numeroLinhas);
-
-  // Calcula o tamanho dos quadrados
-  const tamanhoQuadradoLargura = larguraRetangulo / numeroColunas;
-  const tamanhoQuadradoAltura = alturaRetangulo / numeroLinhas;
-
-  // Retorna os resultados
-  return {
-      numeroLinhas: numeroLinhas,
-      numeroColunas: numeroColunas,
-      tamanhoQuadradoLargura: tamanhoQuadradoLargura,
-      tamanhoQuadradoAltura: tamanhoQuadradoAltura
-  };
-}
-
-function eventoExibirNome(bloquinho, layer){
-  let width = window.innerWidth;
-  let height = window.innerHeight;
-  const tooltip = new Konva.Label({
-    x: width/2,
-    y: height/2,
-    opacity: 1,
-  });
-
-  tooltip.add(new Konva.Tag({
-      fill: '#f05338',
-      cornerRadius: 5
-    })
-  );
-  let fontsize = 0;
-  let padding = 0;
-  if (width < 600) {
-    fontsize = 18;
-    padding = 8;
-  } else if (width < 1024) {
-    fontsize = 22;
-    padding = 14;
-  } else {
-    fontsize = 26;
-    padding = 16;
-  }
-
-  const pessoa = listaPessoas.find((pessoa)=> pessoa.id === bloquinho.pessoaId)
-  if(pessoa == undefined){
-    return
-  }
-  const texto = new Konva.Text({
-    text: "Ponto de luz de " + pessoa.nome +" 🥰️",
-    fontSize: fontsize,
-    fontFamily:'Arial',
-    fill:'white',
-    stroke: 'white',
-    padding: padding,
-  });
-
-  tooltip.add(texto)
-    bloquinho.instanciaImagem.on('click tap', function() {
-      tooltips.forEach((tooltip)=>{
-        tooltip.remove()
-      });
-      hasLuz(bloquinho.instanciaImagem, null, ()=>{
-
-        layer.add(tooltip)
-        tooltip.x((width/2) - (texto.width() / 2))
-      })
-      tooltips.push(tooltip)
+    pessoas.forEach((pessoa, i)=>{
+    listaPessoas.push(new Pessoa({id: pessoa.bloco, nome: pessoa.nome }))
     });
-    
+    const timeout1 = setTimeout(()=>{
+        document.getElementById("loading").classList.add("hide")
+        clearTimeout(timeout1)
+    }, 3000);
+    function update() {
 
-    bloquinho.instanciaImagem.on('mouseover', function() {
-      tooltips.forEach((tooltip)=>{
-        tooltip.remove()
-      });
-      hasLuz(bloquinho.instanciaImagem, null, ()=>{
+        app.stage.removeChildren();
+    let wwidth = window.innerWidth;
+    let wheight = window.innerHeight;
+    function ajustarQuadradosNoRetangulo(larguraRetangulo, alturaRetangulo) {
+        //quantidade de blocos na tela (arredondado para cima ficando na casa dos 1225 blocos)
+        const numeroQuadrados = 1200;
 
-        layer.add(tooltip)
-        tooltip.x((width/2) - (texto.width() / 2))
-      })
-      tooltips.push(tooltip)
-    });
-  
-    bloquinho.instanciaImagem.on('mouseout', function() {
-      tooltips.forEach((tooltip)=>{
-        tooltip.remove()
-      })
-    });
+        // Calcula o número de linhas e colunas
+        const raizQuadrada = Math.sqrt(numeroQuadrados);
+        const numeroLinhas = Math.ceil(raizQuadrada);
+        const numeroColunas = Math.ceil(numeroQuadrados / numeroLinhas);
 
-}
+        // Calcula o tamanho dos quadrados
+        const tamanhoQuadradoLargura = larguraRetangulo / numeroColunas;
+        const tamanhoQuadradoAltura = alturaRetangulo / numeroLinhas;
 
-//verifica se tem estrelinha ou se possui completado
-function hasLuz(image, stage, callback = ()=>{}) {
-  const source = image.attrs.image.currentSrc
-  if(source.includes("estrelinha") || source.includes("completado")){
-    if(stage != null){
-      stage.container().style.cursor = 'pointer';
+        // Retorna os resultados
+        return {
+            numeroLinhas: numeroLinhas,
+            numeroColunas: numeroColunas,
+            tamanhoQuadradoLargura: tamanhoQuadradoLargura,
+            tamanhoQuadradoAltura: tamanhoQuadradoAltura
+        };
     }
-    callback();
-  }
-}
 
-//marca como mãozinha caso o mouse esteja sobre a estrelinha.
-function eventoPonteira(image, stage){
-  image.on('mouseenter', function () {
-    hasLuz(image, stage)
-  });
+    const container = new PIXI.Container();
+    app.stage.addChild(container);
+    const textStyle = new PIXI.TextStyle({
+        fontFamily: 'Arial',
+        fontSize: 26,
+        fontStyle: 'Normal',
+        fontWeight: 'bold',
+        fill: '#ffffff', // gradient
+        stroke: '#4a1850',
+        strokeThickness: 0,
+        /*
+        dropShadow: true,
+        dropShadowColor: '#000000',
+        dropShadowBlur: 4,
+        dropShadowAngle: Math.PI / 6,
+        dropShadowDistance: 6,
+        */
+        wordWrap: true,
+        wordWrapWidth: 440,
+        lineJoin: 'round',
+    });
+   
 
-  image.on('mouseleave', function () {
-    stage.container().style.cursor = 'default';
-  });
-}
+    let luzes = [];
 
-//estrelinhas cheias
-function minhaEstrelinha(){
-  if(listaPessoas.length == bloquinhos.length){
-    for(let i = 0; i < bloquinhos.length; i++){
-      bloquinhos[i].attrs.image=imagem5
-    }
-  }
-}
-
-const bloquinhos = [];
-const blocos = [];
-function update() {
-  quantidadeBlocos=0
-  let width = window.innerWidth;
-  let height = window.innerHeight;
-
-  const stage = new Konva.Stage({
-    container: 'tela',
-    width: width,
-    height: height,
-  });
-
-  const layer = new Konva.Layer();
-
-  stage.add(layer);
   let cX = 0;
   let cY = 0;
-  let img = imagem2
- 
-  const r = ajustarQuadradosNoRetangulo(width, height);
-  let w = r.tamanhoQuadradoLargura
+  const r = ajustarQuadradosNoRetangulo(wwidth, wheight);
+
+  let w = r.tamanhoQuadradoLargura;
   let h = r.tamanhoQuadradoAltura;
-  let id = 0;
   let linha = 0;
   let coluna = 0;
-  while(linha < r.numeroLinhas){
-    while(coluna < r.numeroColunas){
-      const image = new Konva.Image({
-        //stroke: 'white', 
-        x: cX,
-        y: cY,
-        image: img,
-        width: w,
-        height: h
-      });
-      
-      quantidadeBlocos++;
-      //eventos
-      eventoPonteira(image, stage)
+  let contador = 0
+  let textura = luz;
 
-      //addiciona estrelinhas ao painel
-      const pessoa = listaPessoas.find((pessoa)=> pessoa.id === id)
-      if(pessoa !== undefined){
-        image.attrs.image = imagem3
-      }
-      const bloquinho = new Bloquinho({
-        id: id,
-        imagem: image,
-        pessoaId: id
-      });
+//estrelinhas cheias
+if(listaPessoas.length == 1225){
+    textura = luz10Opacidade
+}
 
-      eventoExibirNome(bloquinho, layer)
+
+  while(linha < r.numeroLinhas){ //rows
+    while(coluna < r.numeroColunas){ //cols
+        const bunny = new PIXI.Sprite(cobertura);
+        bunny.anchor.set(0);
+        bunny.width = w
+        bunny.height = h
+        bunny.x = cX
+        bunny.y = cY
+        container.addChild(bunny);
+        luzes.push(bunny)
+        
+        adicionarEstrelinha(contador, textura)
       cX += w
-      id++;
-      bloquinhos.push(image)
-      blocos.push(bloquinho)
-      layer.add(image)
       coluna++
+      contador++
     }
     coluna=0
     linha++
     cX=0
     cY+=h
   }
-  minhaEstrelinha()
 
-  //estrelinhaAquiEstao()
-}
+
+  const richText = new PIXI.Text("pontinho", textStyle);
+        richText.anchor.set(0.5)
+        richText.x = wwidth/2;
+        richText.y = wheight/2;
+        richText.anchor.set(0.5)
+      
+        richText.visible = false
+
+
+        const txtBG = new PIXI.Sprite(PIXI.Texture.WHITE);
+        txtBG.tint =  "#f05338"
+        txtBG.width = richText.width + 50;
+        txtBG.height = richText.height + 40
+        txtBG.x = wwidth/2;
+        txtBG.y = wheight/2;
+        txtBG.anchor.set(0.5)
+        // cage text
+        const cage = new PIXI.Container();
+        cage.addChild(txtBG,richText);
+        // add reference for easy debug
+        cage.name = "textSprite";
+        cage.textSprite = richText;
+        cage.txtBG = txtBG;
+        txtBG.visible = false
+        app.stage.addChild(cage)
+
+
+  function adicionarEstrelinha(id, textura) {
+    //addiciona estrelinhas ao painel
+    const pessoa = listaPessoas.find((pessoa)=> pessoa.id === id)
+      if(pessoa !== undefined){
+        const pontinho = luzes[id]
+        pontinho.texture = textura
+        pontinho.eventMode = 'static';
+        pontinho.cursor = 'pointer';
         
-update()
-window.addEventListener('resize', update)
+        let isTouched = false
+        pontinho.on('pointertap', () =>
+        {
+            isTouched = true
+            richText.text = "Ponto de luz de "+pessoa.nome + " 🥰️"
+            txtBG.width = richText.width + 50;
+            txtBG.height = richText.height + 40
+            richText.visible = true
+            txtBG.visible = true
+            
+            const timeout2 = setInterval(() => {
+                isTouched = false;
+                richText.visible = false
+                txtBG.visible = false
+                clearInterval(timeout2)
+            }, 6000);
+            
+        });
 
+        
 
+        pontinho.on("pointerover", function(){
+            richText.text = "Ponto de luz de "+pessoa.nome + " 🥰️"
+            txtBG.width = richText.width + 50;
+            txtBG.height = richText.height + 40
+            richText.visible = true
+            txtBG.visible = true
+            
+        })
+
+        pontinho.on('pointerout', function(){
+            if(isTouched == false){
+                richText.text = ""
+                richText.visible = false
+                txtBG.visible = false
+            }
+                
+        })
+      }
+  }
+    }
+    update()
+    window.addEventListener('resize', update)

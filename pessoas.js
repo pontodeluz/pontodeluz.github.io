@@ -17,12 +17,12 @@ pessoas.push({bloco: 578, nome: "Arthur"});
 pessoas.push({bloco: 579, nome: "Zé"});
 
 
-/*
 
 //gerador de pessoas para teste
+/*
 let estrelinhas = 0;
 for(let i = 0; i < 1225; i++){
-    pessoas.push({bloco: i, nome: "Fulano"})
+    pessoas.push({bloco: i, nome: "Fulano "+i})
     estrelinhas++
-}*/
-
+}
+*/
