@@ -29,19 +29,33 @@
            display: flex;
            flex-wrap: wrap;
         }
+        @keyframes heartbeat {
+            0% {
+                width: 96px;
+            }
+            50% {
+                width: 128px;
+            }
+            100% {
+                width: 96px;
+            }
+        }
+
         .loading {
-            background: black;
+            background: rgb(255, 234, 234);
             width: 100%;
             height: 100vh;
             position: relative;
             
         }
-        .loading>img, .loading-titulo {
+        .loading>img {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            animation: heartbeat 1s infinite;
         }
+
 
         .loading-titulo {
             color: white;
@@ -56,7 +70,7 @@
         }
     </style>
     <div id="loading" class="loading">
-        <img src="./assets/loading.svg" width="128px"/>
+        <img src="./assets/circor.png" width="128px"/>
         <h2 class="loading-titulo">Modo administrativo</h2>
     </div>
     <div id="tela" class="hide"></div>
