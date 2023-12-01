@@ -9,12 +9,12 @@ const pessoas = [];
  */
 
 //maximo de blocos [1224]
-pessoas.push({bloco: 574, nome: "Sandra"});
-pessoas.push({bloco: 575, nome: "Katia"});
+pessoas.push({bloco: 431, nome: "Sandra"});
+pessoas.push({bloco: 931, nome: "Katia"});
 pessoas.push({bloco: 576, nome: "Patricia"});
-pessoas.push({bloco: 577, nome: "Pedro"});
+pessoas.push({bloco: 300, nome: "Pedro"});
 pessoas.push({bloco: 578, nome: "Arthur"});
-pessoas.push({bloco: 579, nome: "Zé"});
+pessoas.push({bloco: 791, nome: "Zé"});
 
 
 
