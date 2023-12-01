@@ -14,7 +14,7 @@ pessoas.push({bloco: 575, nome: "Katia"});
 pessoas.push({bloco: 576, nome: "Patricia"});
 pessoas.push({bloco: 577, nome: "Pedro"});
 pessoas.push({bloco: 578, nome: "Arthur"});
-pessoas.push({bloco: 579, nome: "Zé!"});
+pessoas.push({bloco: 579, nome: "Zé"});
 
 
 
